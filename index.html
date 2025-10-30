@@ -1,74 +1,144 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Connexion au serveur Garry's Mod...</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Connexion — GMod</title>
   <style>
-    body {
-      background: #0e0e10;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
+    :root { --bg:#0b1220; --card:rgba(255,255,255,0.04); --muted:#9aa7bf; --accent:#3b82f6; }
+    html,body{height:100%;margin:0}
+    body{
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(59,130,246,0.06), transparent),
+                  radial-gradient(900px 400px at 90% 90%, rgba(96,165,250,0.03), transparent),
+                  var(--bg);
+      color:#e6eef8;font-family:Inter,Segoe UI,system-ui,Arial;display:flex;align-items:center;justify-content:center;
     }
-    .btn {
-      background: #5865f2;
-      color: white;
-      border: none;
-      padding: 14px 28px;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: 0.2s;
-      margin-top: 25px;
+    .card{width:min(760px,92%);padding:28px;border-radius:14px;background:var(--card);box-shadow:0 8px 30px rgba(2,6,23,0.6);text-align:center}
+    h1{margin:0 0 6px;font-size:1.4rem}
+    p{margin:0 0 18px;color:var(--muted)}
+    .btn{
+      display:inline-flex;gap:10px;align-items:center;padding:12px 18px;border-radius:10px;
+      background:linear-gradient(90deg,var(--accent),#2563eb);color:white;text-decoration:none;font-weight:600;border:none;cursor:pointer;
     }
-    .btn:hover {
-      background: #4752c4;
-    }
-    h1 {
-      margin-bottom: 20px;
-    }
-    .loading {
-      margin-top: 10px;
-      color: #aaa;
-      font-size: 0.9rem;
-    }
+    .secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);padding:10px 14px;border-radius:8px;margin-left:12px;}
+    .status{margin-top:14px;color:var(--muted);font-size:0.95rem}
+    .log{margin-top:10px;font-size:0.82rem;color:#c7d6ef;text-align:left;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;max-height:160px;overflow:auto}
+    a.link{color:var(--accent);text-decoration:underline}
   </style>
 </head>
 <body>
-  <h1>Connexion en cours au serveur Garry's Mod...</h1>
-  <p class="loading">Veuillez patienter quelques secondes</p>
-  <button class="btn" id="manual">Réessayer la connexion</button>
+  <div class="card" role="main">
+    <h1>Connexion au serveur Garry's Mod</h1>
+    <p>La page va tenter d'ouvrir Steam / Garry's Mod et de se connecter automatiquement.</p>
+
+    <div>
+      <button id="autoBtn" class="btn">🔁 Tenter la connexion automatique</button>
+      <button id="manualBtn" class="secondary">🔧 Réessayer manuellement</button>
+    </div>
+
+    <div class="status" id="status">Statut : en attente...</div>
+
+    <div class="log" id="log" aria-live="polite"></div>
+
+    <p style="margin-top:12px;color:var(--muted)">
+      Si cela ne fonctionne pas, <strong>lance Garry's Mod puis clique sur "Réessayer manuellement"</strong>.<br>
+      Tu peux aussi copier ce lien et le coller dans la barre d'adresse : <code>steam://connect/terre.hynoshield.com:33190</code>
+    </p>
+  </div>
 
   <script>
-    const server = "terre.hynoshield.com:33190";
+    const server = 'terre.hynoshield.com:33190';
+    const runGame = 'steam://rungameid/4000';
+    const connect = `steam://connect/${server}`;
+    const logEl = document.getElementById('log');
+    const statusEl = document.getElementById('status');
 
-    function connect() {
-      // ✅ Étape 1 : essayer de se connecter via le protocole Steam
-      const connectURL = `steam://connect/${server}`;
-      const gameURL = `steam://rungameid/4000`;
-
-      // Lancer Steam / GMod d’abord
-      window.location.href = gameURL;
-
-      // Puis réessayer la connexion après un court délai
-      setTimeout(() => {
-        window.location.href = connectURL;
-      }, 2500);
+    function log(msg) {
+      const t = new Date().toLocaleTimeString();
+      logEl.innerHTML = `<div>[${t}] ${msg}</div>` + logEl.innerHTML;
     }
 
-    // Lancer automatiquement à l’ouverture
-    window.onload = () => {
-      connect();
-    };
+    function setStatus(s) {
+      statusEl.textContent = 'Statut : ' + s;
+      log(s);
+    }
 
-    // Bouton manuel en cas d’échec
-    document.getElementById("manual").addEventListener("click", connect);
+    // Méthode : essaie plusieurs approches avec courts délais entre elles
+    async function attemptFullConnect() {
+      setStatus('Tentative : ouverture Steam (rungameid) → puis connect');
+      // 1) Tentative via iframe
+      try {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = runGame + '//+connect%20' + encodeURIComponent(server); // fallback
+        document.body.appendChild(iframe);
+        log('iframe src vers rungameid envoyée');
+      } catch (e) {
+        log('iframe error : ' + e.message);
+      }
+
+      // 2) window.open vers rungameid (souvent autorisé)
+      try {
+        window.open(runGame, '_self');
+        log('window.open vers rungameid envoyé');
+      } catch (e) {
+        log('window.open(rungameid) bloqué');
+      }
+
+      // 3) Essayer de naviguer (certains navigateurs l'autorisent)
+      try {
+        window.location.href = runGame;
+        log('location.href = rungameid (navigation) envoyée');
+      } catch (e) {
+        log('location.href(rungameid) bloqué');
+      }
+
+      // Attendre un peu pour que Steam/GMod démarre (ou pour que Steam prenne la commande)
+      await new Promise(r => setTimeout(r, 2200));
+
+      // 4) Tentative de connexion directe (si GMod lancé, cette commande est la bonne)
+      try {
+        // plusieurs méthodes : location, open, clic simulé sur <a>
+        try { window.location.href = connect; log('location.href = connect envoyé'); } catch {}
+        try { window.open(connect, '_self'); log('window.open connect envoyé'); } catch {}
+        // clic simulé
+        const a = document.createElement('a');
+        a.href = connect;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        log('clic simulé sur lien connect envoyé');
+      } catch (e) {
+        log('erreur en envoyant connect : ' + e.message);
+      }
+
+      // Dernière attente
+      await new Promise(r => setTimeout(r, 1800));
+
+      setStatus('Tentative terminée — vérifiez le jeu. Si échec, lancez GMod et réessayez.');
+    }
+
+    // Boutons
+    document.getElementById('autoBtn').addEventListener('click', () => {
+      log('Déclenchement manuel : auto attempt');
+      attemptFullConnect();
+    });
+
+    document.getElementById('manualBtn').addEventListener('click', () => {
+      setStatus('Réessai manuel : envoi direct de steam://connect');
+      log('Envoi direct steam://connect');
+      try {
+        window.location.href = connect;
+      } catch (e) {
+        log('manual redirect blocked : ' + e.message);
+      }
+    });
+
+    // Lancement automatique au chargement (optionnel). On laisse l'utilisateur lancer volontairement s'il préfère.
+    window.addEventListener('load', () => {
+      log('Page chargée. Cliquez sur "Tenter la connexion automatique" si souhaité.');
+      setStatus('Prêt — cliquez sur Tenter la connexion automatique');
+    });
   </script>
 </body>
 </html>
