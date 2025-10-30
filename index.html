@@ -4,10 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Connexion au serveur Garry's Mod...</title>
-  <meta http-equiv="refresh" content="0; url=steam://rungameid/4000//+connect terre.hynoshield.com:33190" />
 
   <style>
-    /* 🌙 Style général */
     body {
       background: radial-gradient(circle at top, #0f172a, #0a0f1c);
       color: #e2e8f0;
@@ -22,7 +20,6 @@
       overflow: hidden;
     }
 
-    /* 💫 Animation légère d’arrière-plan */
     .glow {
       position: absolute;
       width: 400px;
@@ -38,7 +35,6 @@
       100% { transform: translate(50px, 30px) scale(1.2); }
     }
 
-    /* 📎 Conteneur principal */
     .content {
       position: relative;
       z-index: 2;
@@ -67,7 +63,6 @@
       margin: 0 0 20px;
     }
 
-    /* 🔗 Bouton stylisé */
     a {
       display: inline-block;
       color: #fff;
@@ -99,10 +94,21 @@
   <div class="content">
     <div class="icon">🔗</div>
     <h1>Connexion au serveur Garry's Mod...</h1>
-    <p>Si la connexion ne démarre pas automatiquement, lancez Garry’s Mod et cliquez ici :</p>
-    <a href="steam://rungameid/4000//+connect terre.hynoshield.com:33190">
+    <p>La connexion va démarrer automatiquement.<br>
+    Si rien ne se passe, lancez Garry’s Mod puis cliquez ci-dessous :</p>
+    <a id="join" href="steam://connect/terre.hynoshield.com:33190">
       🎮 Rejoindre le serveur maintenant
     </a>
   </div>
+
+  <script>
+    // Essaye d’abord de lancer le jeu (si fermé)
+    window.location.href = "steam://rungameid/4000//+connect terre.hynoshield.com:33190";
+
+    // Si le jeu est déjà ouvert, tentative de connexion directe après 2 secondes
+    setTimeout(() => {
+      window.location.href = "steam://connect/terre.hynoshield.com:33190";
+    }, 2000);
+  </script>
 </body>
 </html>
