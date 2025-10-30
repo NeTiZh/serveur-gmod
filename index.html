@@ -1,114 +1,74 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Connexion au serveur Garry's Mod...</title>
-
   <style>
     body {
-      background: radial-gradient(circle at top, #0f172a, #0a0f1c);
-      color: #e2e8f0;
-      font-family: "Inter", sans-serif;
-      text-align: center;
+      background: #0e0e10;
+      color: #fff;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
-      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
     }
-
-    .glow {
-      position: absolute;
-      width: 400px;
-      height: 400px;
-      background: rgba(80, 150, 255, 0.1);
-      filter: blur(100px);
-      border-radius: 50%;
-      animation: float 8s ease-in-out infinite alternate;
-    }
-
-    @keyframes float {
-      0% { transform: translate(-50px, -30px) scale(1); }
-      100% { transform: translate(50px, 30px) scale(1.2); }
-    }
-
-    .content {
-      position: relative;
-      z-index: 2;
-      max-width: 500px;
-      padding: 40px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 20px;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(10px);
-      animation: fadeIn 1.2s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h1 {
-      font-size: 1.6rem;
-      margin-bottom: 10px;
-    }
-
-    p {
-      color: #94a3b8;
-      font-size: 1rem;
-      margin: 0 0 20px;
-    }
-
-    a {
-      display: inline-block;
-      color: #fff;
-      background: linear-gradient(90deg, #3b82f6, #2563eb);
-      text-decoration: none;
-      padding: 12px 26px;
+    .btn {
+      background: #5865f2;
+      color: white;
+      border: none;
+      padding: 14px 28px;
       border-radius: 10px;
-      font-weight: 600;
-      transition: all 0.25s ease;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 25px;
     }
-
-    a:hover {
-      transform: scale(1.05);
-      background: linear-gradient(90deg, #60a5fa, #3b82f6);
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    .btn:hover {
+      background: #4752c4;
     }
-
-    .icon {
-      font-size: 2rem;
-      margin-bottom: 10px;
-      display: inline-block;
+    h1 {
+      margin-bottom: 20px;
+    }
+    .loading {
+      margin-top: 10px;
+      color: #aaa;
+      font-size: 0.9rem;
     }
   </style>
 </head>
-
 <body>
-  <div class="glow"></div>
-
-  <div class="content">
-    <div class="icon">🔗</div>
-    <h1>Connexion au serveur Garry's Mod...</h1>
-    <p>La connexion va démarrer automatiquement.<br>
-    Si rien ne se passe, lancez Garry’s Mod puis cliquez ci-dessous :</p>
-    <a id="join" href="steam://connect/terre.hynoshield.com:33190">
-      🎮 Rejoindre le serveur maintenant
-    </a>
-  </div>
+  <h1>Connexion en cours au serveur Garry's Mod...</h1>
+  <p class="loading">Veuillez patienter quelques secondes</p>
+  <button class="btn" id="manual">Réessayer la connexion</button>
 
   <script>
-    // Essaye d’abord de lancer le jeu (si fermé)
-    window.location.href = "steam://rungameid/4000//+connect terre.hynoshield.com:33190";
+    const server = "terre.hynoshield.com:33190";
 
-    // Si le jeu est déjà ouvert, tentative de connexion directe après 2 secondes
-    setTimeout(() => {
-      window.location.href = "steam://connect/terre.hynoshield.com:33190";
-    }, 2000);
+    function connect() {
+      // ✅ Étape 1 : essayer de se connecter via le protocole Steam
+      const connectURL = `steam://connect/${server}`;
+      const gameURL = `steam://rungameid/4000`;
+
+      // Lancer Steam / GMod d’abord
+      window.location.href = gameURL;
+
+      // Puis réessayer la connexion après un court délai
+      setTimeout(() => {
+        window.location.href = connectURL;
+      }, 2500);
+    }
+
+    // Lancer automatiquement à l’ouverture
+    window.onload = () => {
+      connect();
+    };
+
+    // Bouton manuel en cas d’échec
+    document.getElementById("manual").addEventListener("click", connect);
   </script>
 </body>
 </html>
