@@ -2,26 +2,107 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Connexion au serveur...</title>
-  <meta http-equiv="refresh" content="0; url=steam://connect/terre.hynoshield.com:33190" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion au serveur Garry's Mod...</title>
+  <meta http-equiv="refresh" content="0; url=steam://rungameid/4000//+connect terre.hynoshield.com:33190" />
+
   <style>
+    /* 🌙 Style général */
     body {
-      background-color: #0f172a;
+      background: radial-gradient(circle at top, #0f172a, #0a0f1c);
       color: #e2e8f0;
-      font-family: sans-serif;
+      font-family: "Inter", sans-serif;
       text-align: center;
-      padding-top: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
     }
+
+    /* 💫 Animation légère d’arrière-plan */
+    .glow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: rgba(80, 150, 255, 0.1);
+      filter: blur(100px);
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes float {
+      0% { transform: translate(-50px, -30px) scale(1); }
+      100% { transform: translate(50px, 30px) scale(1.2); }
+    }
+
+    /* 📎 Conteneur principal */
+    .content {
+      position: relative;
+      z-index: 2;
+      max-width: 500px;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 1.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #94a3b8;
+      font-size: 1rem;
+      margin: 0 0 20px;
+    }
+
+    /* 🔗 Bouton stylisé */
     a {
-      color: #60a5fa;
+      display: inline-block;
+      color: #fff;
+      background: linear-gradient(90deg, #3b82f6, #2563eb);
       text-decoration: none;
-      font-weight: bold;
+      padding: 12px 26px;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+
+    a:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #60a5fa, #3b82f6);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    }
+
+    .icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      display: inline-block;
     }
   </style>
 </head>
+
 <body>
-  <h1>🔗 Connexion au serveur Garry's Mod...</h1>
-  <p>Si la connexion ne démarre pas automatiquement, lancez Garry’s Mod avant de cliquer sur le lien. :</p>
-  <p><a href="steam://connect/terre.hynoshield.com:33190">Rejoindre le serveur maintenant</a></p>
+  <div class="glow"></div>
+
+  <div class="content">
+    <div class="icon">🔗</div>
+    <h1>Connexion au serveur Garry's Mod...</h1>
+    <p>Si la connexion ne démarre pas automatiquement, lancez Garry’s Mod et cliquez ici :</p>
+    <a href="steam://rungameid/4000//+connect terre.hynoshield.com:33190">
+      🎮 Rejoindre le serveur maintenant
+    </a>
+  </div>
 </body>
 </html>
