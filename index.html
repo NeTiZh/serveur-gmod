@@ -1,144 +1,93 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Connexion — GMod</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion GMod — HynoShield</title>
   <style>
-    :root { --bg:#0b1220; --card:rgba(255,255,255,0.04); --muted:#9aa7bf; --accent:#3b82f6; }
-    html,body{height:100%;margin:0}
-    body{
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(59,130,246,0.06), transparent),
-                  radial-gradient(900px 400px at 90% 90%, rgba(96,165,250,0.03), transparent),
-                  var(--bg);
-      color:#e6eef8;font-family:Inter,Segoe UI,system-ui,Arial;display:flex;align-items:center;justify-content:center;
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top left, #0f172a, #020617);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    .card{width:min(760px,92%);padding:28px;border-radius:14px;background:var(--card);box-shadow:0 8px 30px rgba(2,6,23,0.6);text-align:center}
-    h1{margin:0 0 6px;font-size:1.4rem}
-    p{margin:0 0 18px;color:var(--muted)}
-    .btn{
-      display:inline-flex;gap:10px;align-items:center;padding:12px 18px;border-radius:10px;
-      background:linear-gradient(90deg,var(--accent),#2563eb);color:white;text-decoration:none;font-weight:600;border:none;cursor:pointer;
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px 40px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
     }
-    .secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);padding:10px 14px;border-radius:8px;margin-left:12px;}
-    .status{margin-top:14px;color:var(--muted);font-size:0.95rem}
-    .log{margin-top:10px;font-size:0.82rem;color:#c7d6ef;text-align:left;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;max-height:160px;overflow:auto}
-    a.link{color:var(--accent);text-decoration:underline}
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+    p {
+      color: #94a3b8;
+      margin-bottom: 25px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      color: white;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
+    .launch {
+      background: linear-gradient(90deg, #3b82f6, #2563eb);
+    }
+    .connect {
+      background: linear-gradient(90deg, #10b981, #059669);
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
   </style>
 </head>
 <body>
-  <div class="card" role="main">
-    <h1>Connexion au serveur Garry's Mod</h1>
-    <p>La page va tenter d'ouvrir Steam / Garry's Mod et de se connecter automatiquement.</p>
+  <div class="container">
+    <h1>Rejoindre le serveur HynoShield</h1>
+    <p>Sélectionne l’option selon que ton jeu est lancé ou non :</p>
 
-    <div>
-      <button id="autoBtn" class="btn">🔁 Tenter la connexion automatique</button>
-      <button id="manualBtn" class="secondary">🔧 Réessayer manuellement</button>
+    <div class="buttons">
+      <button class="btn launch" onclick="launchGame()">🎮 Jeu non lancé</button>
+      <button class="btn connect" onclick="connectServer()">✅ Jeu déjà lancé</button>
     </div>
 
-    <div class="status" id="status">Statut : en attente...</div>
-
-    <div class="log" id="log" aria-live="polite"></div>
-
-    <p style="margin-top:12px;color:var(--muted)">
-      Si cela ne fonctionne pas, <strong>lance Garry's Mod puis clique sur "Réessayer manuellement"</strong>.<br>
-      Tu peux aussi copier ce lien et le coller dans la barre d'adresse : <code>steam://connect/terre.hynoshield.com:33190</code>
-    </p>
+    <footer>IP : <code>terre.hynoshield.com:33190</code></footer>
   </div>
 
   <script>
-    const server = 'terre.hynoshield.com:33190';
-    const runGame = 'steam://rungameid/4000';
-    const connect = `steam://connect/${server}`;
-    const logEl = document.getElementById('log');
-    const statusEl = document.getElementById('status');
+    const ip = "terre.hynoshield.com:33190";
 
-    function log(msg) {
-      const t = new Date().toLocaleTimeString();
-      logEl.innerHTML = `<div>[${t}] ${msg}</div>` + logEl.innerHTML;
+    function launchGame() {
+      // Lance GMod + connexion
+      window.location.href = `steam://rungameid/4000//+connect ${ip}`;
     }
 
-    function setStatus(s) {
-      statusEl.textContent = 'Statut : ' + s;
-      log(s);
+    function connectServer() {
+      // Connecte directement au serveur
+      window.location.href = `steam://connect/${ip}`;
     }
-
-    // Méthode : essaie plusieurs approches avec courts délais entre elles
-    async function attemptFullConnect() {
-      setStatus('Tentative : ouverture Steam (rungameid) → puis connect');
-      // 1) Tentative via iframe
-      try {
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = runGame + '//+connect%20' + encodeURIComponent(server); // fallback
-        document.body.appendChild(iframe);
-        log('iframe src vers rungameid envoyée');
-      } catch (e) {
-        log('iframe error : ' + e.message);
-      }
-
-      // 2) window.open vers rungameid (souvent autorisé)
-      try {
-        window.open(runGame, '_self');
-        log('window.open vers rungameid envoyé');
-      } catch (e) {
-        log('window.open(rungameid) bloqué');
-      }
-
-      // 3) Essayer de naviguer (certains navigateurs l'autorisent)
-      try {
-        window.location.href = runGame;
-        log('location.href = rungameid (navigation) envoyée');
-      } catch (e) {
-        log('location.href(rungameid) bloqué');
-      }
-
-      // Attendre un peu pour que Steam/GMod démarre (ou pour que Steam prenne la commande)
-      await new Promise(r => setTimeout(r, 2200));
-
-      // 4) Tentative de connexion directe (si GMod lancé, cette commande est la bonne)
-      try {
-        // plusieurs méthodes : location, open, clic simulé sur <a>
-        try { window.location.href = connect; log('location.href = connect envoyé'); } catch {}
-        try { window.open(connect, '_self'); log('window.open connect envoyé'); } catch {}
-        // clic simulé
-        const a = document.createElement('a');
-        a.href = connect;
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        log('clic simulé sur lien connect envoyé');
-      } catch (e) {
-        log('erreur en envoyant connect : ' + e.message);
-      }
-
-      // Dernière attente
-      await new Promise(r => setTimeout(r, 1800));
-
-      setStatus('Tentative terminée — vérifiez le jeu. Si échec, lancez GMod et réessayez.');
-    }
-
-    // Boutons
-    document.getElementById('autoBtn').addEventListener('click', () => {
-      log('Déclenchement manuel : auto attempt');
-      attemptFullConnect();
-    });
-
-    document.getElementById('manualBtn').addEventListener('click', () => {
-      setStatus('Réessai manuel : envoi direct de steam://connect');
-      log('Envoi direct steam://connect');
-      try {
-        window.location.href = connect;
-      } catch (e) {
-        log('manual redirect blocked : ' + e.message);
-      }
-    });
-
-    // Lancement automatique au chargement (optionnel). On laisse l'utilisateur lancer volontairement s'il préfère.
-    window.addEventListener('load', () => {
-      log('Page chargée. Cliquez sur "Tenter la connexion automatique" si souhaité.');
-      setStatus('Prêt — cliquez sur Tenter la connexion automatique');
-    });
   </script>
 </body>
 </html>
